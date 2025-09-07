@@ -73,8 +73,7 @@ const OfferService = () => {
       });
       
       const res = await axios.post(`${SERVICE_API_END_POINT}/create`, submitData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-        withCredentials: true
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
       
       if (res.data.success) {

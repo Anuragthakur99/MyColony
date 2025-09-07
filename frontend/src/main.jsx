@@ -2,6 +2,7 @@ import React from "react"
 import "./index.css"
 import "./styles/themes.css" // Import the themes CSS
 import "./styles/theme-fixes.css" // Import the theme fixes CSS
+import "./utils/axiosConfig" // Import axios configuration
 import App from "./App.jsx"
 import { Toaster } from "sonner"
 import { Provider } from "react-redux"
