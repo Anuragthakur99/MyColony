@@ -3,8 +3,8 @@ import nodemailer from "nodemailer"
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "dar2ness009@gmail.com", // Your Gmail address
-    pass: "jyfulbugyeujbzzx", // Your app password
+    user: process.env.EMAIL_USER, // Your Gmail address from .env
+    pass: process.env.EMAIL_PASS, // Your app password from .env
   },
 })
 
@@ -12,7 +12,7 @@ function sendMail(to, sub, msg) {
   console.log("Attempting to send email to:", to)
   transporter.sendMail(
     {
-      from: "dar2ness009@gmail.com", // Sender address
+      from: process.env.EMAIL_USER, // Sender address from .env
       to: to,
       subject: sub,
       html: msg,

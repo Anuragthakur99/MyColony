@@ -1,84 +1,142 @@
 import { Link } from "react-router-dom"
+import { Mail, MapPin, Phone, Clock, Github, Twitter, Linkedin } from "lucide-react"
 
 const Footer = () => {
+  const currentYear = new Date().getFullYear()
+
+  const footerLinks = {
+    company: [
+      { name: "About Us", href: "/about" },
+      { name: "Careers", href: "/careers" },
+      { name: "Contact", href: "/contact" },
+      { name: "Blog", href: "/blog" }
+    ],
+    support: [
+      { name: "Help Center", href: "/help" },
+      { name: "Privacy Policy", href: "/privacy" },
+      { name: "Terms of Service", href: "/terms" },
+      { name: "Cookie Policy", href: "/cookies" }
+    ],
+    features: [
+      { name: "Browse Services", href: "/all-services" },
+      { name: "My Services", href: "/my-services" },
+      { name: "Offer Service", href: "/offer-service" },
+      { name: "Manage Colonies", href: "/admin/colonies" }
+    ]
+  }
+
+  const socialLinks = [
+    { name: "Twitter", icon: Twitter, href: "https://twitter.com" },
+    { name: "LinkedIn", icon: Linkedin, href: "https://linkedin.com" },
+    { name: "GitHub", icon: Github, href: "https://github.com" }
+  ]
+
   return (
-    <footer className="footer-themed py-12">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-8 md:mb-0 text-center md:text-left">
-            <h2 className="text-3xl font-extrabold text-theme-footer-text">
-              My<span className="text-primary">Colony</span>
-            </h2>
-            <p className="text-sm mt-2 text-theme-footer-text/75">© 2024 Your Company. All rights reserved.</p>
+    <footer className="bg-muted/30 border-t border-border">
+      <div className="container mx-auto px-6 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+          {/* Brand section */}
+          <div className="lg:col-span-2">
+            <Link to="/" className="flex items-center space-x-2 mb-4">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <span className="text-primary-foreground font-bold text-lg">M</span>
+              </div>
+              <h2 className="text-2xl font-bold">
+                My<span className="text-primary">Colony</span>
+              </h2>
+            </Link>
+            <p className="text-muted-foreground mb-6 max-w-md leading-relaxed">
+              Connecting neighbors and building stronger communities through local services. 
+              Discover trusted service providers in your colony.
+            </p>
+            <div className="space-y-2 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4" />
+                <span>New Delhi, India</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Mail className="h-4 w-4" />
+                <span>contact@mycolony.com</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Phone className="h-4 w-4" />
+                <span>+91 98765 43210</span>
+              </div>
+            </div>
           </div>
 
-          <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8">
-            <Link
-              to="/about"
-              className="text-theme-footer-text/75 hover:text-theme-footer-text transition-colors duration-300 text-lg font-medium"
-            >
-              About Us
-            </Link>
-            <Link
-              to="/contact"
-              className="text-theme-footer-text/75 hover:text-theme-footer-text transition-colors duration-300 text-lg font-medium"
-            >
-              Contact
-            </Link>
-            <Link
-              to="/privacy"
-              className="text-theme-footer-text/75 hover:text-theme-footer-text transition-colors duration-300 text-lg font-medium"
-            >
-              Privacy Policy
-            </Link>
-            <Link
-              to="/clock"
-              className="text-theme-footer-text/75 hover:text-theme-footer-text transition-colors duration-300 text-lg font-medium"
-            >
-              IST Clock
-            </Link>
+          {/* Links sections */}
+          <div>
+            <h3 className="font-semibold text-foreground mb-4">Company</h3>
+            <ul className="space-y-3">
+              {footerLinks.company.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    to={link.href}
+                    className="text-muted-foreground hover:text-foreground transition-colors duration-200"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
 
-          <div className="flex space-x-6 mt-8 md:mt-0">
-            <Link
-              to="https://facebook.com"
-              className="transform hover:scale-110 transition-transform duration-300"
-              aria-label="Facebook"
-            >
-              <svg
-                className="w-8 h-8 text-theme-footer-text/75 hover:text-theme-footer-text"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M22.676 0H1.324C.593 0 0 .592 0 1.324v21.352C0 23.408.593 24 1.324 24H12.82V14.706H9.692v-3.578h3.128V8.408c0-3.1 1.893-4.787 4.657-4.787 1.325 0 2.463.1 2.794.144v3.238l-1.918.001c-1.503 0-1.794.715-1.794 1.762v2.31h3.587l-.468 3.578h-3.119V24h6.116C23.407 24 24 23.408 24 22.676V1.324C24 .592 23.407 0 22.676 0z" />
-              </svg>
-            </Link>
-            <Link
-              to="https://twitter.com"
-              className="transform hover:scale-110 transition-transform duration-300"
-              aria-label="Twitter"
-            >
-              <svg
-                className="w-8 h-8 text-theme-footer-text/75 hover:text-theme-footer-text"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M24 4.557a9.835 9.835 0 01-2.828.775 4.934 4.934 0 002.165-2.724 9.867 9.867 0 01-3.127 1.195 4.924 4.924 0 00-8.38 4.49A13.978 13.978 0 011.67 3.149 4.93 4.93 0 003.16 9.724a4.903 4.903 0 01-2.229-.616v.062a4.93 4.93 0 003.946 4.827 4.902 4.902 0 01-2.224.084 4.93 4.93 0 004.6 3.417A9.869 9.869 0 010 21.543a13.978 13.978 0 007.548 2.212c9.057 0 14.01-7.507 14.01-14.01 0-.213-.004-.425-.015-.636A10.012 10.012 0 0024 4.557z" />
-              </svg>
-            </Link>
-            <Link
-              to="https://linkedin.com"
-              className="transform hover:scale-110 transition-transform duration-300"
-              aria-label="LinkedIn"
-            >
-              <svg
-                className="w-8 h-8 text-theme-footer-text/75 hover:text-theme-footer-text"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M20.447 20.452H16.85v-5.569c0-1.327-.027-3.037-1.852-3.037-1.854 0-2.137 1.446-2.137 2.94v5.666H9.147V9.756h3.448v1.464h.05c.48-.91 1.653-1.871 3.401-1.871 3.634 0 4.307 2.39 4.307 5.498v5.605zM5.337 8.29c-1.105 0-2-.896-2-2 0-1.106.895-2 2-2 1.104 0 2 .895 2 2 0 1.104-.896 2-2 2zM7.119 20.452H3.553V9.756h3.566v10.696zM22.225 0H1.771C.791 0 0 .774 0 1.729v20.542C0 23.226.792 24 1.771 24h20.451c.979 0 1.771-.774 1.771-1.729V1.729C24 .774 23.205 0 22.225 0z" />
-              </svg>
-            </Link>
+          <div>
+            <h3 className="font-semibold text-foreground mb-4">Support</h3>
+            <ul className="space-y-3">
+              {footerLinks.support.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    to={link.href}
+                    className="text-muted-foreground hover:text-foreground transition-colors duration-200"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-semibold text-foreground mb-4">Features</h3>
+            <ul className="space-y-3">
+              {footerLinks.features.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    to={link.href}
+                    className="text-muted-foreground hover:text-foreground transition-colors duration-200"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom section */}
+        <div className="border-t border-border mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="text-sm text-muted-foreground">
+            © {currentYear} MyColony. All rights reserved.
+          </div>
+          
+          <div className="flex items-center gap-4">
+            {socialLinks.map((social) => {
+              const Icon = social.icon
+              return (
+                <a
+                  key={social.name}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-lg bg-muted hover:bg-primary hover:text-primary-foreground transition-all duration-200 flex items-center justify-center group"
+                  aria-label={social.name}
+                >
+                  <Icon className="h-5 w-5" />
+                </a>
+              )
+            })}
           </div>
         </div>
       </div>

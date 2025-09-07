@@ -1,12 +1,12 @@
-/* Default Theme - Soft Light Theme */
+/* Professional Theme System */
 :root {
-  --background: 210 50% 98%;
+  --background: 0 0% 100%;
   --foreground: 222.2 84% 4.9%;
   --card: 0 0% 100%;
   --card-foreground: 222.2 84% 4.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 222.2 84% 4.9%;
-  --primary: 210 64% 50%;
+  --primary: 221.2 83.2% 53.3%;
   --primary-foreground: 210 40% 98%;
   --secondary: 210 40% 96.1%;
   --secondary-foreground: 222.2 47.4% 11.2%;
@@ -18,228 +18,100 @@
   --destructive-foreground: 210 40% 98%;
   --border: 214.3 31.8% 91.4%;
   --input: 214.3 31.8% 91.4%;
-  --ring: 222.2 84% 4.9%;
-  --radius: 0.5rem;
-
-  /* Custom theme colors */
-  --theme-navbar-bg: 0 0% 100%;
-  --theme-navbar-text: 222.2 84% 4.9%;
-  --theme-hero-bg: 210 30% 95%; /* Light blue-gray for default theme */
-  --theme-hero-text: 222.2 84% 4.9%; /* Dark text for contrast */
-  --theme-button-primary-bg: 210 64% 50%;
-  --theme-button-primary-text: 210 40% 98%;
-  --theme-button-secondary-bg: 210 40% 96.1%;
-  --theme-button-secondary-text: 222.2 47.4% 11.2%;
-  --theme-footer-bg: 210 30% 95%;
-  --theme-footer-text: 222.2 84% 4.9%;
-  --theme-card-bg: 0 0% 100%;
-  --theme-card-border: 214.3 31.8% 91.4%;
-  --theme-card-shadow: 210 20% 80%;
+  --ring: 221.2 83.2% 53.3%;
+  --radius: 0.75rem;
 }
 
-/* Dark Theme */
 [data-theme="dark"] {
-  --background: 222.2 47% 11%;
-  --foreground: 210 40% 98%;
-  --card: 222.2 47% 11%;
-  --card-foreground: 210 40% 98%;
-  --popover: 222.2 47% 11%;
-  --popover-foreground: 210 40% 98%;
-  --primary: 217.2 91.2% 59.8%; /* Bright blue for dark theme */
-  --primary-foreground: 222.2 47.4% 11.2%;
-  --secondary: 217.2 32.6% 17.5%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --accent: 217.2 32.6% 17.5%;
-  --accent-foreground: 210 40% 98%;
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 142.1 76.2% 36.3%;
+  --primary-foreground: 355.7 100% 97.3%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
   --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 212.7 26.8% 83.9%;
-
-  /* Custom theme colors */
-  --theme-navbar-bg: 222.2 47% 11%;
-  --theme-navbar-text: 210 40% 98%;
-  --theme-hero-bg: 222.2 47% 8%; /* Very dark background for dark theme */
-  --theme-hero-text: 210 40% 98%;
-  --theme-button-primary-bg: 217.2 91.2% 59.8%;
-  --theme-button-primary-text: 222.2 47.4% 11.2%;
-  --theme-button-secondary-bg: 217.2 32.6% 17.5%;
-  --theme-button-secondary-text: 210 40% 98%;
-  --theme-footer-bg: 222.2 47% 8%;
-  --theme-footer-text: 210 40% 98%;
-  --theme-card-bg: 222.2 47% 11%;
-  --theme-card-border: 217.2 32.6% 17.5%;
-  --theme-card-shadow: 0 0% 0%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 142.4 71.8% 29.2%;
 }
 
-/* Purple Theme */
 [data-theme="purple"] {
-  --background: 270 50% 99%;
-  --foreground: 270 50% 10%;
-  --card: 270 50% 99%;
-  --card-foreground: 270 50% 10%;
-  --popover: 270 50% 99%;
-  --popover-foreground: 270 50% 10%;
-  --primary: 270 76% 50%;
-  --primary-foreground: 270 50% 99%;
-  --secondary: 270 30% 90%;
-  --secondary-foreground: 270 50% 30%;
-  --muted: 270 30% 90%;
-  --muted-foreground: 270 20% 50%;
-  --accent: 270 30% 90%;
-  --accent-foreground: 270 50% 30%;
+  --background: 315 100% 99%;
+  --foreground: 315 50% 10%;
+  --card: 315 100% 99%;
+  --card-foreground: 315 50% 10%;
+  --popover: 315 100% 99%;
+  --popover-foreground: 315 50% 10%;
+  --primary: 262.1 83.3% 57.8%;
+  --primary-foreground: 210 20% 98%;
+  --secondary: 315 20% 95%;
+  --secondary-foreground: 315 50% 20%;
+  --muted: 315 20% 95%;
+  --muted-foreground: 315 10% 50%;
+  --accent: 315 20% 95%;
+  --accent-foreground: 315 50% 20%;
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 0 0% 98%;
-  --border: 270 30% 90%;
-  --input: 270 30% 90%;
-  --ring: 270 50% 50%;
-
-  /* Custom theme colors */
-  --theme-navbar-bg: 270 50% 99%;
-  --theme-navbar-text: 270 50% 30%;
-  --theme-hero-bg: 270 50% 25%; /* Darker purple for better contrast */
-  --theme-hero-text: 270 50% 99%;
-  --theme-button-primary-bg: 270 76% 50%;
-  --theme-button-primary-text: 270 50% 99%;
-  --theme-button-secondary-bg: 270 30% 90%;
-  --theme-button-secondary-text: 270 50% 30%;
-  --theme-footer-bg: 270 50% 25%;
-  --theme-footer-text: 270 50% 99%;
-  --theme-card-bg: 270 50% 99%;
-  --theme-card-border: 270 30% 90%;
-  --theme-card-shadow: 270 50% 70%;
+  --border: 315 20% 90%;
+  --input: 315 20% 90%;
+  --ring: 262.1 83.3% 57.8%;
 }
 
-/* Green Theme */
 [data-theme="green"] {
-  --background: 150 50% 99%;
-  --foreground: 150 50% 10%;
-  --card: 150 50% 99%;
-  --card-foreground: 150 50% 10%;
-  --popover: 150 50% 99%;
-  --popover-foreground: 150 50% 10%;
-  --primary: 150 76% 40%;
-  --primary-foreground: 150 50% 99%;
-  --secondary: 150 30% 90%;
-  --secondary-foreground: 150 50% 30%;
-  --muted: 150 30% 90%;
-  --muted-foreground: 150 20% 50%;
-  --accent: 150 30% 90%;
-  --accent-foreground: 150 50% 30%;
+  --background: 138 76% 97%;
+  --foreground: 140 100% 12%;
+  --card: 138 76% 97%;
+  --card-foreground: 140 100% 12%;
+  --popover: 138 76% 97%;
+  --popover-foreground: 140 100% 12%;
+  --primary: 142.1 70.6% 45.3%;
+  --primary-foreground: 144.9 80.4% 10%;
+  --secondary: 138 20% 90%;
+  --secondary-foreground: 140 50% 20%;
+  --muted: 138 20% 90%;
+  --muted-foreground: 138 10% 50%;
+  --accent: 138 20% 90%;
+  --accent-foreground: 140 50% 20%;
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 0 0% 98%;
-  --border: 150 30% 90%;
-  --input: 150 30% 90%;
-  --ring: 150 50% 40%;
-
-  /* Custom theme colors */
-  --theme-navbar-bg: 150 50% 99%;
-  --theme-navbar-text: 150 50% 30%;
-  --theme-hero-bg: 150 50% 25%; /* Darker green for better contrast */
-  --theme-hero-text: 150 50% 99%;
-  --theme-button-primary-bg: 150 76% 40%;
-  --theme-button-primary-text: 150 50% 99%;
-  --theme-button-secondary-bg: 150 30% 90%;
-  --theme-button-secondary-text: 150 50% 30%;
-  --theme-footer-bg: 150 50% 25%;
-  --theme-footer-text: 150 50% 99%;
-  --theme-card-bg: 150 50% 99%;
-  --theme-card-border: 150 30% 90%;
-  --theme-card-shadow: 150 50% 70%;
+  --border: 138 20% 85%;
+  --input: 138 20% 85%;
+  --ring: 142.1 70.6% 45.3%;
 }
 
-/* Blue Theme */
 [data-theme="blue"] {
-  --background: 210 50% 99%;
-  --foreground: 210 50% 10%;
-  --card: 210 50% 99%;
-  --card-foreground: 210 50% 10%;
-  --popover: 210 50% 99%;
-  --popover-foreground: 210 50% 10%;
-  --primary: 210 100% 50%;
-  --primary-foreground: 210 50% 99%;
-  --secondary: 210 30% 90%;
-  --secondary-foreground: 210 50% 30%;
-  --muted: 210 30% 90%;
-  --muted-foreground: 210 20% 50%;
-  --accent: 210 30% 90%;
-  --accent-foreground: 210 50% 30%;
+  --background: 213 100% 98%;
+  --foreground: 213 100% 12%;
+  --card: 213 100% 98%;
+  --card-foreground: 213 100% 12%;
+  --popover: 213 100% 98%;
+  --popover-foreground: 213 100% 12%;
+  --primary: 217.2 91.2% 59.8%;
+  --primary-foreground: 222.2 84% 4.9%;
+  --secondary: 213 20% 92%;
+  --secondary-foreground: 213 50% 20%;
+  --muted: 213 20% 92%;
+  --muted-foreground: 213 10% 50%;
+  --accent: 213 20% 92%;
+  --accent-foreground: 213 50% 20%;
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 0 0% 98%;
-  --border: 210 30% 90%;
-  --input: 210 30% 90%;
-  --ring: 210 80% 50%;
-
-  /* Custom theme colors */
-  --theme-navbar-bg: 210 50% 99%;
-  --theme-navbar-text: 210 50% 30%;
-  --theme-hero-bg: 210 50% 25%; /* Darker blue for better contrast */
-  --theme-hero-text: 210 50% 99%;
-  --theme-button-primary-bg: 210 100% 50%;
-  --theme-button-primary-text: 210 50% 99%;
-  --theme-button-secondary-bg: 210 30% 90%;
-  --theme-button-secondary-text: 210 50% 30%;
-  --theme-footer-bg: 210 50% 25%;
-  --theme-footer-text: 210 50% 99%;
-  --theme-card-bg: 210 50% 99%;
-  --theme-card-border: 210 30% 90%;
-  --theme-card-shadow: 210 50% 70%;
+  --border: 213 20% 87%;
+  --input: 213 20% 87%;
+  --ring: 217.2 91.2% 59.8%;
 }
 
-/* Apply theme-specific styles to common elements */
 body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
-}
-
-.navbar-themed {
-  background-color: hsl(var(--theme-navbar-bg));
-  color: hsl(var(--theme-navbar-text));
-}
-
-.hero-themed {
-  background: linear-gradient(to bottom right, hsl(var(--theme-hero-bg)), hsl(var(--theme-hero-bg), 0.9));
-  color: hsl(var(--theme-hero-text));
-}
-
-/* Add this new class for hero text */
-.text-theme-hero-text {
-  color: hsl(var(--theme-hero-text));
-}
-
-.footer-themed {
-  background-color: hsl(var(--theme-footer-bg));
-  color: hsl(var(--theme-footer-text));
-}
-
-.card-themed {
-  background-color: hsl(var(--theme-card-bg));
-  border-color: hsl(var(--theme-card-border));
-  box-shadow: 0 4px 6px -1px hsla(var(--theme-card-shadow), 0.1), 0 2px 4px -1px hsla(var(--theme-card-shadow), 0.06);
-}
-
-.button-primary-themed {
-  background-color: hsl(var(--theme-button-primary-bg));
-  color: hsl(var(--theme-button-primary-text));
-}
-
-.button-primary-themed:hover {
-  background-color: hsl(var(--theme-button-primary-bg), 0.9);
-}
-
-.button-secondary-themed {
-  background-color: hsl(var(--theme-button-secondary-bg));
-  color: hsl(var(--theme-button-secondary-text));
-}
-
-.button-secondary-themed:hover {
-  background-color: hsl(var(--theme-button-secondary-bg), 0.9);
-}
-
-/* Add text color utility classes */
-.text-theme-hero-text {
-  color: hsl(var(--theme-hero-text));
+  transition: background-color 0.3s ease, color 0.3s ease;
 }

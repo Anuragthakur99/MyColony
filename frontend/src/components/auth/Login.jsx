@@ -16,8 +16,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [input, setInput] = useState({
     email: "",
-    password: "",
-    role: "",
+    password: ""
   })
   const { loading } = useSelector((store) => store.auth)
   const navigate = useNavigate()
@@ -114,6 +113,8 @@ const Login = () => {
                 </div>
               </div>
 
+
+
               <Button
                 type="submit"
                 className="w-full button-primary-themed font-bold py-3 rounded-md transition duration-300 shadow-md hover:shadow-lg"
@@ -128,6 +129,8 @@ const Login = () => {
                   "Login"
                 )}
               </Button>
+              
+
 
               <p className="text-center text-sm text-muted-foreground">
                 Don't have an account?{" "}

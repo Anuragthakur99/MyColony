@@ -1,10 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Navbar from "../shared/Navbar"
 import { Button } from "../ui/button"
 import { Link, useNavigate } from "react-router-dom"
-import { USER_API_END_POINT } from "@/utils/constant"
+import { USER_API_END_POINT, COLONY_API_END_POINT } from "@/utils/constant"
 import { toast } from "sonner"
 import axios from "axios"
 import { Eye, EyeOff, Loader2, Upload, User, Mail, Phone, Lock } from "lucide-react"
@@ -20,8 +20,26 @@ const Signup = () => {
     phoneNumber: "",
     password: "",
     role: "",
+    colonyId: "",
+    address: "",
+    flatNumber: "",
     file: "",
   })
+  const [colonies, setColonies] = useState([])
+  
+  useEffect(() => {
+    const fetchColonies = async () => {
+      try {
+        const res = await axios.get(`${COLONY_API_END_POINT}/get`);
+        if (res.data.success) {
+          setColonies(res.data.colonies);
+        }
+      } catch (error) {
+        console.log('Error fetching colonies:', error);
+      }
+    };
+    fetchColonies();
+  }, [])
   const [errors, setErrors] = useState({})
   const { loading } = useSelector((store) => store.auth)
   const dispatch = useDispatch()
@@ -55,12 +73,21 @@ const Signup = () => {
     if (!validateInput()) {
       return
     }
+    
+    if (!input.role || !input.colonyId) {
+      toast.error("Please select role and colony")
+      return
+    }
+    
     const formData = new FormData()
     formData.append("fullname", input.fullname)
     formData.append("email", input.email)
     formData.append("phoneNumber", input.phoneNumber)
     formData.append("password", input.password)
     formData.append("role", input.role)
+    formData.append("colonyId", input.colonyId)
+    formData.append("address", input.address || "")
+    formData.append("flatNumber", input.flatNumber || "")
     if (input.file) {
       formData.append("file", input.file)
     }
@@ -190,25 +217,66 @@ const Signup = () => {
                 </div>
               </div>
 
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-card-foreground">Select Colony</label>
+                <select
+                  name="colonyId"
+                  value={input.colonyId}
+                  onChange={changeEventHandler}
+                  className="w-full px-3 py-2 bg-background/50 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition duration-200"
+                  required
+                >
+                  <option value="">Choose your colony</option>
+                  {colonies.map(colony => (
+                    <option key={colony._id} value={colony._id}>{colony.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-card-foreground">Address</label>
+                  <input
+                    type="text"
+                    name="address"
+                    value={input.address}
+                    onChange={changeEventHandler}
+                    placeholder="Your address"
+                    className="w-full px-3 py-2 bg-background/50 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition duration-200"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-card-foreground">Flat Number</label>
+                  <input
+                    type="text"
+                    name="flatNumber"
+                    value={input.flatNumber}
+                    onChange={changeEventHandler}
+                    placeholder="A-101"
+                    className="w-full px-3 py-2 bg-background/50 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition duration-200"
+                  />
+                </div>
+              </div>
+
               <div className="flex items-center justify-center space-x-6">
                 <label className="inline-flex items-center text-card-foreground">
                   <input
                     type="radio"
                     name="role"
-                    value="student"
+                    value="resident"
                     className="form-radio text-primary"
-                    checked={input.role === "student"}
+                    checked={input.role === "resident"}
                     onChange={changeEventHandler}
                   />
-                  <span className="ml-2">User</span>
+                  <span className="ml-2">Resident</span>
                 </label>
                 <label className="inline-flex items-center text-card-foreground">
                   <input
                     type="radio"
                     name="role"
-                    value="recruiter"
+                    value="admin"
                     className="form-radio text-primary"
-                    checked={input.role === "recruiter"}
+                    checked={input.role === "admin"}
                     onChange={changeEventHandler}
                   />
                   <span className="ml-2">Admin</span>
@@ -216,7 +284,7 @@ const Signup = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-card-foreground">Profile Image</label>
+                <label className="text-sm font-medium text-card-foreground">Profile Image (Optional)</label>
                 <div className="flex items-center justify-center w-full">
                   <label
                     htmlFor="dropzone-file"
@@ -227,7 +295,7 @@ const Signup = () => {
                       <p className="mb-2 text-sm text-card-foreground">
                         <span className="font-semibold">Click to upload</span> or drag and drop
                       </p>
-                      <p className="text-xs text-muted-foreground">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                      <p className="text-xs text-muted-foreground">PNG, JPG or GIF (Optional)</p>
                     </div>
                     <input
                       id="dropzone-file"

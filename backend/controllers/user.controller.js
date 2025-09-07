@@ -1,292 +1,254 @@
-import { User } from "../models/user.model.js"
-import bcrypt from "bcryptjs"
-import jwt from "jsonwebtoken"
-import getDataUri from "../utils/datauri.js"
-import cloudinary from "../utils/cloudinary.js"
-import axios from "axios"
-import useragent from "useragent"
+import { User } from "../models/user.model.js";
+import { Colony } from "../models/colony.model.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import getDataUri from "../utils/datauri.js";
+import cloudinary from "../utils/cloudinary.js";
+import mongoose from "mongoose";
 
-import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
-
-const s3Client = new S3Client({
-  region: "eu-north-1",
-  credentials: {
-    accessKeyId: "AKIAZI2LGMLHRAZSMITA",
-    secretAccessKey: "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",
-  },
-})
-
-import nodemailer from "nodemailer"
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "dar2ness009@gmail.com", // Your Gmail address
-    pass: "jyfulbugyeujbzzx", // Your app password
-  },
-})
-
-function sendMail(to, sub, msg) {
-  console.log("Attempting to send email to:", to)
-  transporter.sendMail(
-    {
-      from: "dar2ness009@gmail.com", // Sender address
-      to: to,
-      subject: sub,
-      html: msg,
-    },
-    (error, info) => {
-      if (error) {
-        console.error("Email error:", error)
-      } else {
-        console.log("Email sent:", info.response)
-      }
-    },
-  )
-}
-
-// sendMail("singlaanmol23@gmail.com","Haan bhai","Kiase ho");
-
-const getLocationFromIP = async (ip) => {
-  try {
-    const response = await axios.get(`https://ipinfo.io?token=e8703b54959057`)
-    return response.data // Includes city, region, country, etc.
-  } catch (error) {
-    console.error("Error fetching location:", error.message)
-    return { city: "Unknown", region: "Unknown", country: "Unknown" }
-  }
-}
-
-//REGISTER
 export const register = async (req, res) => {
-  try {
-    const { fullname, email, phoneNumber, password, role } = req.body
-    if (!fullname || !email || !phoneNumber || !password || !role) {
-      return res.status(400).json({
-        message: "something is missing",
-        success: false,
-      })
+    try {
+        const { fullname, email, phoneNumber, password, role, colonyId } = req.body;
+         
+        if (!fullname || !email || !phoneNumber || !password || !role || !colonyId) {
+            return res.status(400).json({
+                message: "All required fields must be filled",
+                success: false
+            });
+        }
+
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({
+                message: 'User already exists with this email.',
+                success: false,
+            });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        let profilePhoto = "";
+        if (req.file) {
+            try {
+                const fileUri = getDataUri(req.file);
+                const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+                profilePhoto = cloudResponse.secure_url;
+            } catch (uploadError) {
+                console.log("File upload error:", uploadError);
+            }
+        }
+
+        // Verify the selected colony exists
+        const selectedColony = await Colony.findById(colonyId);
+        if (!selectedColony) {
+            return res.status(400).json({
+                message: "Selected colony not found",
+                success: false
+            });
+        }
+
+        const { address, flatNumber } = req.body;
+        
+        await User.create({
+            fullname,
+            email,
+            phoneNumber,
+            password: hashedPassword,
+            role,
+            colony: colonyId,
+            isVerified: true,
+            profile: {
+                profilePhoto,
+                address: address || "",
+                flatNumber: flatNumber || ""
+            }
+        });
+
+        return res.status(201).json({
+            message: "Account created successfully!",
+            success: true
+        });
+    } catch (error) {
+        console.log("Registration error:", error);
+        return res.status(500).json({
+            message: error.message || "Server error",
+            success: false
+        });
     }
+};
 
-    const file = req.file
-    const fileUri = getDataUri(file)
-    const cloudResponse = await cloudinary.uploader.upload(fileUri.content)
-
-    //checkl kaar email pehle se to nahi exsist karti
-    const user = await User.findOne({ email })
-    if (user) {
-      return res.status(400).json({
-        message: "email already exsist",
-        success: false,
-      })
-    }
-
-    //pass hash kaar
-    const hashedPassword = await bcrypt.hash(password, 10)
-    await User.create({
-      fullname,
-      email,
-      phoneNumber,
-      password: hashedPassword,
-      role,
-      profile: {
-        profilePhoto: cloudResponse.secure_url,
-      },
-    })
-    sendMail(`${email}`, `Hi ${fullname} You have successfully registered your account on ElevateU`, `We Welcome you`)
-    return res.status(201).json({
-      message: "Account created",
-      success: true,
-    })
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-//LOGIN
 export const login = async (req, res) => {
-  try {
-    const { email, password } = req.body
-    if (!email || !password) {
-      return res.status(400).json({
-        message: "something is missing",
-        success: false,
-      })
-    }
-    let user = await User.findOne({ email })
-    if (!user) {
-      return res.status(400).json({
-        message: "email or password is incorrect",
-        success: false,
-      })
-    }
-    const isPasswordMatch = await bcrypt.compare(password, user.password)
-    if (!isPasswordMatch) {
-      return res.status(400).json({
-        message: "Incorrect email or password",
-        success: false,
-      })
-    }
+    try {
+        const { email, password } = req.body;
+        
+        if (!email || !password) {
+            return res.status(400).json({
+                message: "Email and password are required",
+                success: false
+            });
+        }
 
-    // if(role != user.role){
-    //     return res.status(400).json({
-    //         message:"Account doesnt exsist ",
-    //         success:false
-    //     })
-    // }
-    const tokenData = {
-      userId: user._id,
+        let user = await User.findOne({ email }).populate('colony', 'name address');
+        if (!user) {
+            return res.status(400).json({
+                message: "Invalid email or password",
+                success: false
+            });
+        }
+
+        const isPasswordMatch = await bcrypt.compare(password, user.password);
+        if (!isPasswordMatch) {
+            return res.status(400).json({
+                message: "Invalid email or password",
+                success: false
+            });
+        }
+
+        // Auto-verify for now
+        // if (!user.isVerified) {
+        //     return res.status(400).json({
+        //         message: "Account not verified. Please wait for admin approval.",
+        //         success: false
+        //     });
+        // }
+
+        const tokenData = {
+            userId: user._id,
+        };
+        const token = await jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: "1d" });
+
+        user = {
+            _id: user._id,
+            fullname: user.fullname,
+            email: user.email,
+            phoneNumber: user.phoneNumber,
+            role: user.role,
+            profile: user.profile,
+            colony: user.colony,
+            isVerified: user.isVerified
+        };
+
+        return res.status(200)
+            .cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: "strict" })
+            .json({
+                message: `Welcome back ${user.fullname}`,
+                user,
+                success: true
+            });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Server error",
+            success: false
+        });
     }
-    const token = await jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: "1d" })
-    user = {
-      _id: user._id,
-      fullname: user.fullname,
-      email: user.email,
-      phoneNumber: user.phoneNumber,
-      role: user.role,
-      profile: user.profile,
-    }
-
-    const ipAddress = req.headers["x-forwarded-for"] || req.socket.remoteAddress
-    const deviceInfo = useragent.parse(req.headers["user-agent"]).toString()
-    const location = await getLocationFromIP(ipAddress)
-
-    // const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: "1d" });
-
-    const emailBody = `
-      <h1>Login Alert</h1>
-      <p>You logged into your account.</p>
-      <ul>
-        <li><b>Device:</b> ${deviceInfo}</li>
-        <li><b>IP Address:</b> ${ipAddress}</li>
-        <li><b>Location:</b> ${location.city}, ${location.region}, ${location.country}</li>
-      </ul>
-    `
-    sendMail(user.email, "Login Alert", emailBody)
-
-    return res
-      .status(200)
-      .cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpsOnly: true, sameSite: "Strict" })
-      .json({
-        message: `Welcome back ${user.fullname}`,
-        user,
-        success: true,
-      })
-  } catch (error) {
-    console.log(error)
-  }
-}
+};
 
 export const logout = async (req, res) => {
-  try {
-    return res.status(200).cookie("token", "", { maxAge: 0 }).json({
-      message: "Log out success",
-      seccess: true,
-    })
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-async function putObject(filename, contentType) {
-  const command = new PutObjectCommand({
-    Bucket: "new-private-01",
-    Key: `resume/${filename}`,
-    ContentType: contentType,
-  })
-  const url = await getSignedUrl(s3Client, command)
-  return url
-}
-
-async function getObjectURL(key) {
-  const command = new GetObjectCommand({
-    Bucket: "new-private-01",
-    Key: key,
-  })
-  const url = getSignedUrl(s3Client, command, { expiresIn: 604800 })
-  return url
-}
+    try {
+        return res.status(200).cookie("token", "", { maxAge: 0 }).json({
+            message: "Logged out successfully",
+            success: true
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Server error",
+            success: false
+        });
+    }
+};
 
 export const updateProfile = async (req, res) => {
-  try {
-    const { fullname, email, phoneNumber, bio, skills } = req.body
-    const file = req.file
+    try {
+        console.log('Update profile request:', req.body);
+        const { fullname, email, phoneNumber, bio, address, flatNumber, skills } = req.body;
+        const userId = req.id;
 
-    // const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+        let user = await User.findById(userId);
+        if (!user) {
+            return res.status(400).json({
+                message: "User not found",
+                success: false
+            });
+        }
 
-    // if(!fullname || !email || !phoneNumber || !bio || !skills){
-    //     return res.status(400).json({
-    //         message:"something is missing",
-    //         success:false
-    //     });
-    // };
+        console.log('User before update:', user);
 
-    //cloudinary ayega edhar
-    let skillsArray
-    if (skills) {
-      skillsArray = skills.split(",")
+        if (fullname) user.fullname = fullname;
+        if (email) user.email = email;
+        if (phoneNumber) user.phoneNumber = phoneNumber;
+        
+        // Initialize profile if it doesn't exist
+        if (!user.profile) {
+            user.profile = {};
+        }
+        
+        if (bio !== undefined) user.profile.bio = bio;
+        if (address !== undefined) user.profile.address = address;
+        if (flatNumber !== undefined) user.profile.flatNumber = flatNumber;
+        if (skills !== undefined) {
+            console.log('Processing skills:', skills);
+            // Convert comma-separated string to array
+            user.profile.skills = skills.split(',').map(skill => skill.trim()).filter(skill => skill.length > 0);
+            console.log('Skills array:', user.profile.skills);
+        }
+
+
+
+        console.log('User before save:', user);
+        await user.save();
+        console.log('User saved successfully');
+
+        user = {
+            _id: user._id,
+            fullname: user.fullname,
+            email: user.email,
+            phoneNumber: user.phoneNumber,
+            role: user.role,
+            profile: user.profile,
+            colony: user.colony
+        };
+
+        return res.status(200).json({
+            message: "Profile updated successfully",
+            user,
+            success: true
+        });
+    } catch (error) {
+        console.log('Profile update error:', error);
+        return res.status(500).json({
+            message: error.message || "Server error",
+            success: false
+        });
     }
-    const userId = req.id //middle ware authen
-    let user = await User.findById(userId)
+};
 
-    if (!user) {
-      return res.status(400).json({
-        message: "User not found",
-        success: false,
-      })
+export const verifyUser = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const user = await User.findByIdAndUpdate(
+            userId,
+            { isVerified: true },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+                success: false
+            });
+        }
+
+        return res.status(200).json({
+            message: "User verified successfully",
+            success: true
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Server error",
+            success: false
+        });
     }
-
-    if (fullname) user.fullname = fullname
-    if (email) user.email = email
-    if (phoneNumber) user.phoneNumber = phoneNumber
-    if (bio) user.profile.bio = bio
-    if (skills) user.profile.skills = skillsArray
-    // console.log(geturi);
-    if (file) {
-      const fileUri = getDataUri(file)
-      console.log(fileUri.fileName)
-      const uri = await putObject(email.split(".")[0] + ".pdf", "application/pdf")
-      // console.log(uri);
-
-      const uploadResponse = await axios.put(uri, file.buffer, {
-        headers: {
-          "Content-Type": file.mimetype,
-        },
-      })
-      // const geturi=
-      user.profile.resume = await getObjectURL(`resume/${email.split(".")[0]}.pdf`)
-      user.profile.resumeOrignalName = user.fullname
-    }
-    // if(fullname) user.fullname=fullname;
-
-    // user.fullname=fullname,
-    // user.email=email,
-    // user.phoneNumber=phoneNumber,
-    // user.profile.bio=bio,
-    // user.profile.skills=skillsArray
-
-    // if(cloudResponse){
-    //     user.profile.resume=cloudResponse.secure_url
-    //     user.profile.resumeOrignalName=file.orignalname
-    // }
-
-    await user.save()
-
-    user = {
-      _id: user._id,
-      fullname: user.fullname,
-      email: user.email,
-      phoneNumber: user.phoneNumber,
-      role: user.role,
-      profile: user.profile,
-    }
-
-    return res.status(200).json({
-      message: "profile upadted",
-      user,
-      seccess: true,
-    })
-  } catch (error) {
-    console.log(error)
-  }
-}
+};

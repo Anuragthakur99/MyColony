@@ -6,22 +6,25 @@ import { getCookie } from '../utils/cookies'
 
 const ProtectedRoute = () => {
   const [isLoading, setIsLoading] = useState(true)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const { user } = useSelector((state) => state.auth)
 
   useEffect(() => {
     const checkAuth = () => {
       const token = getCookie("token")
-      if (token && user) {
-        setIsAuthenticated(true)
-      } else {
-        setIsAuthenticated(false)
-        toast.error('You need to log in to access this page')
+      // Check if user exists OR if token exists (for persistence)
+      if (user || token) {
+        setIsLoading(false)
+        return
       }
+      
+      // Only show error and redirect if neither user nor token exists
+      toast.error('You need to log in to access this page')
       setIsLoading(false)
     }
 
-    checkAuth()
+    // Add a small delay to allow Redux persist to rehydrate
+    const timer = setTimeout(checkAuth, 100)
+    return () => clearTimeout(timer)
   }, [user])
 
   if (isLoading) {
@@ -32,8 +35,10 @@ const ProtectedRoute = () => {
     )
   }
 
+  const token = getCookie("token")
+  const isAuthenticated = user || token
+  
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />
 }
 
 export default ProtectedRoute
-

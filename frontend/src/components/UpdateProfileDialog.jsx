@@ -4,14 +4,14 @@ import axios from 'axios'
 import { toast } from 'sonner'
 import { Loader2, Upload } from 'lucide-react'
 
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog'
+import { Button } from './ui/button'
+import { Input } from './ui/input'
+import { Label } from './ui/label'
+import { Textarea } from './ui/textarea'
 
-import { USER_API_END_POINT } from '@/utils/constant'
-import { setUser } from '@/redux/authSlice'
+import { USER_API_END_POINT } from '../utils/constant'
+import { setUser } from '../redux/authSlice'
 
 const UpdateProfileDialog = ({ open, setOpen }) => {
     const [loading, setLoading] = useState(false)
@@ -23,8 +23,10 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         email: user?.email || '',
         phoneNumber: user?.phoneNumber || '',
         bio: user?.profile?.bio || '',
+        address: user?.profile?.address || '',
+        flatNumber: user?.profile?.flatNumber || '',
         skills: user?.profile?.skills?.join(', ') || '',
-        file: user?.profile?.resume || ''
+        file: null
     })
 
     const changeEventHandler = (e) => {
@@ -39,10 +41,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         }
     }
 
-    const fileChangeHandler = async (e) => {
-        const file = e.target.files?.[0]
-        setInput({...input, file: file || null})
-    }
+
 
     const submitHandler = async (e) => {
         e.preventDefault()
@@ -51,6 +50,8 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         formData.append("email", input.email)
         formData.append("phoneNumber", input.phoneNumber)
         formData.append("bio", input.bio)
+        formData.append("address", input.address)
+        formData.append("flatNumber", input.flatNumber)
         formData.append("skills", input.skills)
         if (input.file) {
             formData.append("file", input.file)
@@ -80,11 +81,11 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="sm:max-w-[425px] bg-white">
+            <DialogContent className="sm:max-w-[500px] max-h-[80vh] overflow-y-auto bg-white">
                 <DialogHeader>
                     <DialogTitle className="text-2xl font-bold text-center text-gray-900">Update Profile</DialogTitle>
                 </DialogHeader>
-                <form onSubmit={submitHandler} className="space-y-4">
+                <form onSubmit={submitHandler} className="space-y-3">
                     <div className="space-y-2">
                         <Label htmlFor="fullname" className="text-gray-700">Name</Label>
                         <Input
@@ -127,6 +128,28 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                             className="border-gray-300 focus:border-gray-500"
                         />
                     </div>
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-2">
+                            <Label htmlFor="address" className="text-gray-700">Address</Label>
+                            <Input
+                                id="address"
+                                name="address"
+                                value={input.address}
+                                onChange={changeEventHandler}
+                                className="border-gray-300 focus:border-gray-500"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="flatNumber" className="text-gray-700">Flat Number</Label>
+                            <Input
+                                id="flatNumber"
+                                name="flatNumber"
+                                value={input.flatNumber}
+                                onChange={changeEventHandler}
+                                className="border-gray-300 focus:border-gray-500"
+                            />
+                        </div>
+                    </div>
                     <div className="space-y-2">
                         <Label htmlFor="skills" className="text-gray-700">Skills (comma-separated)</Label>
                         <Input
@@ -138,30 +161,17 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                         />
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="file" className="text-gray-700">Resume (PDF)</Label>
-                        <div className="flex items-center space-x-2">
-                            <Input
-                                id="file"
-                                name="file"
-                                type="file"
-                                accept="application/pdf"
-                                onChange={fileChangeHandler}
-                                className="hidden"
-                            />
-                            <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() => document.getElementById('file')?.click()}
-                                className="w-full border-gray-300 text-gray-700 hover:bg-gray-100"
-                            >
-                                <Upload className="mr-2 h-4 w-4" />
-                                {input.file ? 'Change File' : 'Upload Resume'}
-                            </Button>
-                        </div>
-                        {input.file && (
-                            <p className="text-sm text-gray-600 mt-1">{input.file.name}</p>
-                        )}
+                        <Label htmlFor="file" className="text-gray-700">Profile Photo</Label>
+                        <input
+                            id="file"
+                            name="file"
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => setInput({...input, file: e.target.files?.[0] || null})}
+                            className="w-full p-2 border border-border rounded-md"
+                        />
                     </div>
+
                     <DialogFooter>
                         <Button 
                             type="submit" 

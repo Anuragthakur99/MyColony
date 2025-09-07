@@ -2,18 +2,18 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import Home from "./components/Home"
 import Login from "./components/auth/Login"
 import Signup from "./components/auth/Signup"
-import Jobs from "./components/Jobs"
 import Browse from "./components/Browse"
 import Profile from "./components/Profile"
-import JobDescription from "./components/JobDescription"
-import Companies from "./components/admin/Companies"
-import CompanyCreate from "./components/admin/CompanyCreate"
-import CompanySetup from "./components/admin/CompanySetup"
-import AdminJobs from "./components/admin/AdminJobs"
-import PostJob from "./components/admin/PostJob"
-import Applicants from "./components/admin/Applicants"
+import ColonyHome from "./components/ColonyHome"
+import ServiceDetail from "./components/ServiceDetail"
+import OfferService from "./components/OfferService"
+import MyServices from "./components/MyServices"
+import AllServices from "./components/AllServices"
+import ManageColonies from "./components/admin/ManageColonies"
+import AddColony from "./components/admin/AddColony"
+import ApproveServices from "./components/admin/ApproveServices"
 import ProtectedRoute from "./components/ProtectedRoute"
-import ClockPage from "./components/ClockPage" // Import the new ClockPage component
+
 
 const appRouter = createBrowserRouter([
   {
@@ -28,17 +28,10 @@ const appRouter = createBrowserRouter([
     path: "/signup",
     element: <Signup />,
   },
-  {
-    path: "/clock", // Add a dedicated route for the clock
-    element: <ClockPage />,
-  },
+
   {
     element: <ProtectedRoute />,
     children: [
-      {
-        path: "/jobs",
-        element: <Jobs />,
-      },
       {
         path: "/browse",
         element: <Browse />,
@@ -48,33 +41,37 @@ const appRouter = createBrowserRouter([
         element: <Profile />,
       },
       {
-        path: "/description/:id",
-        element: <JobDescription />,
+        path: "/colony/:id",
+        element: <ColonyHome />,
       },
       {
-        path: "/admin/companies",
-        element: <Companies />,
+        path: "/service/:id",
+        element: <ServiceDetail />,
       },
       {
-        path: "/admin/companies/create",
-        element: <CompanyCreate />,
+        path: "/offer-service",
+        element: <OfferService />,
       },
       {
-        path: "/admin/jobs",
-        element: <AdminJobs />,
+        path: "/my-services",
+        element: <MyServices />,
       },
       {
-        path: "/admin/companies/:id",
-        element: <CompanySetup />,
+        path: "/all-services",
+        element: <AllServices />,
       },
       {
-        path: "/admin/jobs/create",
-        element: <PostJob />,
+        path: "/admin/colonies",
+        element: <ManageColonies />,
       },
       {
-        path: "/admin/jobs/:id/applicants",
-        element: <Applicants />,
+        path: "/admin/add-colony",
+        element: <AddColony />,
       },
+      {
+        path: "/admin/services",
+        element: <ApproveServices />,
+      }
     ],
   },
 ])
