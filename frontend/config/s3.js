@@ -1,24 +1,17 @@
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import dotenv from "dotenv"
-dotenv.config();
 
-// type UploadToS3Bucket = {
-//   fileContent: Buffer; // The file content as a Buffer
-//   mimetype: string; // The MIME type of the file, e.g., 'image/jpeg'
-//   filename: string; // The name of the file to be saved in the S3 bucket
-// };
 const {
-  AWS_ACCESS_KEY_ID,
-  AWS_SECRET_ACCESS_KEY,
-  AWS_BUCKET_REGION,
-  AWS_S3_BUCKET_NAME,
-} = process.env;
+  VITE_MYCOLONY_AWS_ACCESS_KEY,
+  VITE_MYCOLONY_AWS_SECRET_KEY,
+  VITE_MYCOLONY_AWS_REGION,
+  VITE_MYCOLONY_AWS_BUCKET_NAME,
+} = import.meta.env;
 
 const s3Uploader = new S3Client({
-  region: AWS_BUCKET_REGION || "us-east-1",
+  region: VITE_MYCOLONY_AWS_REGION || "us-east-1",
   credentials: {
-    accessKeyId: AWS_ACCESS_KEY_ID || "",
-    secretAccessKey: AWS_SECRET_ACCESS_KEY || "",
+    accessKeyId: VITE_MYCOLONY_AWS_ACCESS_KEY || "",
+    secretAccessKey: VITE_MYCOLONY_AWS_SECRET_KEY || "",
   },
 });
 
@@ -28,11 +21,12 @@ const UploadToS3Bucket = async ({
   mimetype,
 }) => {
   const params = {
-    Bucket: AWS_S3_BUCKET_NAME,
-    Key: filename, // File name in S3
+    Bucket: VITE_MYCOLONY_AWS_BUCKET_NAME,
+    Key: filename,
     Body: fileContent,
     ContentType: mimetype,
   };
   return s3Uploader.send(new PutObjectCommand(params));
 };
+
 export { UploadToS3Bucket };
