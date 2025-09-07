@@ -9,7 +9,8 @@ const isAuthenticated=async (req,res,next)=>{
                 success:false
             })
         }
-        const decode= await jwt.verify(token,process.env.SECRET_KEY);
+        const jwtSecret = process.env.SECRET_KEY || process.env.JWT_SECRET_KEY || "fallback-secret-key-for-development";
+        const decode= await jwt.verify(token, jwtSecret);
         if(!decode){
             return res.status(401).json({
                 message:"Invalid token",

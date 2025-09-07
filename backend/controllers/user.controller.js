@@ -115,7 +115,8 @@ export const login = async (req, res) => {
         const tokenData = {
             userId: user._id,
         };
-        const token = await jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: "1d" });
+        const jwtSecret = process.env.SECRET_KEY || process.env.JWT_SECRET_KEY || "fallback-secret-key-for-development";
+        const token = await jwt.sign(tokenData, jwtSecret, { expiresIn: "1d" });
 
         user = {
             _id: user._id,
