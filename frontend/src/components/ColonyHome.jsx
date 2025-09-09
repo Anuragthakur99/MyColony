@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from './shared/Navbar';
 import Footer from './shared/Footer';
 import ServiceCard from './ServiceCard';
@@ -12,6 +12,7 @@ import { COLONY_API_END_POINT, SERVICE_API_END_POINT } from '../utils/constant';
 
 const ColonyHome = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [colony, setColony] = useState(null);
   const [services, setServices] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -118,7 +119,7 @@ const ColonyHome = () => {
               </div>
             )}
             
-            <Button className="btn-primary" onClick={() => window.location.href = '/offer-service'}>
+            <Button className="btn-primary" onClick={() => navigate('/offer-service')}>
               <Plus className="h-4 w-4 mr-2" />
               Offer Your Service
             </Button>
@@ -163,7 +164,7 @@ const ColonyHome = () => {
               <p className="text-muted-foreground mb-6">
                 Be the first to offer services in this category!
               </p>
-              <Button className="btn-primary" onClick={() => window.location.href = '/offer-service'}>
+              <Button className="btn-primary" onClick={() => navigate('/offer-service')}>
                 <Plus className="h-4 w-4 mr-2" />
                 Add Your Service
               </Button>
